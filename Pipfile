@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+
+[dev-packages]
+numpy = "*"
+pandas = "*"
+scipy = "*"
+sympy = "*"
+cirq = "==0.5.0.dev20190416130350"
+openfermion = "==0.10.0.dev20190416194415"
+
+[packages]
+
+[requires]
+python_version = "3.7"
