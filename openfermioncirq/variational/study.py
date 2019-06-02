@@ -355,7 +355,7 @@ class VariationalStudy:
                     reevaluate_final_params,
                     save_x_vals,
                     seeds[0] if seeds is not None
-                    else numpy.random.randint(4294967296),
+                    else numpy.random.randint(4294967296, dtype=numpy.uint32),
                     self.ansatz.default_initial_params(),
                     self._black_box_type
                 )
@@ -398,7 +398,7 @@ class VariationalStudy:
                         reevaluate_final_params,
                         save_x_vals,
                         seeds[i] if seeds is not None
-                        else numpy.random.randint(4294967296),
+                        else numpy.random.randint(4294967296, dtype=numpy.uint32),
                         self.ansatz.default_initial_params(),
                         self._black_box_type
                     )
@@ -420,7 +420,7 @@ class VariationalStudy:
                         reevaluate_final_params,
                         save_x_vals,
                         seeds[i] if seeds is not None
-                        else numpy.random.randint(4294967296),
+                        else numpy.random.randint(4294967296, dtype=numpy.uint32),
                         self.ansatz.default_initial_params(),
                         self._black_box_type
                     )
