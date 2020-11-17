@@ -13,8 +13,6 @@
 from openfermioncirq.gates import (
     CRxxyy,
     CRyxxy,
-    CXXYY,
-    CYXXY,
     CXXYYPowGate,
     CYXXYPowGate,
     DoubleExcitation,
@@ -26,19 +24,20 @@ from openfermioncirq.gates import (
     Rzz,
     rot11,
     rot111,
-    XXYY,
     XXYYPowGate,
-    YXXY,
     YXXYPowGate,
+    fermionic_simulation_gates_from_interaction_operator,
+    ParityPreservingFermionicGate,
     QuadraticFermionicSimulationGate,
     CubicFermionicSimulationGate,
-    QuarticFermionicSimulationGate
+    QuarticFermionicSimulationGate,
 )
 
 from openfermioncirq.primitives import (
     ffft,
     prepare_gaussian_state,
-    prepare_slater_determinant)
+    prepare_slater_determinant,
+)
 
 from openfermioncirq.primitives.bogoliubov_transform import bogoliubov_transform
 
@@ -54,7 +53,8 @@ from openfermioncirq.variational import (
     SwapNetworkTrotterHubbardAnsatz,
     VariationalAnsatz,
     VariationalObjective,
-    VariationalStudy)
+    VariationalStudy,
+)
 
 # Import modules last to avoid circular dependencies
 from openfermioncirq import (
@@ -67,3 +67,29 @@ from openfermioncirq import (
 )
 
 from openfermioncirq._version import __version__
+
+# Deprecated
+# pylint: disable=wrong-import-order
+import sys as _sys
+import warnings as _warnings
+from openfermioncirq._compat import wrap_module as _wrap_module
+with _warnings.catch_warnings():
+    _warnings.simplefilter('ignore')
+    from openfermioncirq.gates.common_gates import (
+        XXYY,
+        YXXY,
+    )
+    from openfermioncirq.gates.three_qubit_gates import (
+        CXXYY,
+        CYXXY,
+    )
+_deprecated_constants = {
+    'XXYY': ('v0.5.0', 'Use cirq.ISWAP with negated exponent, instead'),
+    'YXXY': ('v0.5.0', 'Use cirq.PhasedISwapPowGate, instead.'),
+    'CXXYY': ('v0.5.0', 'Use cirq.ControlledGate and cirq.ISWAP with '
+              'negated exponent, instead'),
+    'CYXXY': ('v0.5.0', 'Use cirq.ControlledGate and '
+              'cirq.PhasedISwapPowGate, instead.'),
+}
+_sys.modules[__name__] = _wrap_module(_sys.modules[__name__],
+                                      _deprecated_constants)

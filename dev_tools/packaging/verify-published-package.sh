@@ -80,11 +80,11 @@ for PYTHON_VERSION in python3; do
 
     # Check that code runs without dev deps.
     echo Checking that code executes
-    "${tmp_dir}/${PYTHON_VERSION}/bin/python" -c "import cirq, openfermioncirq as ofc; print(cirq.Circuit.from_ops(ofc.swap_network(cirq.LineQubit.range(5))))"
+    "${tmp_dir}/${PYTHON_VERSION}/bin/python" -c "import cirq, openfermioncirq as ofc; print(cirq.Circuit(ofc.swap_network(cirq.LineQubit.range(5))))"
 
     # Run tests.
     echo Installing pytest requirements
-    "${tmp_dir}/${PYTHON_VERSION}/bin/pip" install --quiet pytest
+    cat "${DEV_DEPS_FILE}" | grep pytest | xargs "${tmp_dir}/${PYTHON_VERSION}/bin/pip" install --quiet
     PY_VER=$(ls "${tmp_dir}/${PYTHON_VERSION}/lib")
     echo Running tests
     "${tmp_dir}/${PYTHON_VERSION}/bin/pytest" --quiet --disable-pytest-warnings "${tmp_dir}/${PYTHON_VERSION}/lib/${PY_VER}/site-packages/${PROJECT_NAME}"

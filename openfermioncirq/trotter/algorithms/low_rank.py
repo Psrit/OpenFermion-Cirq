@@ -12,7 +12,7 @@
 
 """A Trotter algorithm using the low rank decomposition strategy."""
 
-from typing import Optional, Sequence, TYPE_CHECKING, Tuple
+from typing import cast, Optional, Sequence, TYPE_CHECKING, Tuple
 
 import numpy
 
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 
 class LowRankTrotterAlgorithm(TrotterAlgorithm):
-    """A Trotter algorithm using the low rank decomposition strategy.
+    r"""A Trotter algorithm using the low rank decomposition strategy.
 
     This algorithm simulates an InteractionOperator with real coefficients.
     The one-body terms are simulated in their diagonal basis; the basis change
@@ -157,7 +157,7 @@ class AsymmetricLowRankTrotterStep(LowRankTrotterStep):
 
         # Simulate the one-body terms.
         for p in range(n_qubits):
-            yield cirq.Rz(rads=
+            yield cirq.rz(rads=
                     -self.one_body_energies[p] * time
                     ).on(qubits[p])
 
@@ -185,7 +185,7 @@ class AsymmetricLowRankTrotterStep(LowRankTrotterStep):
 
             # Simulate the diagonal two-body terms.
             for p in range(n_qubits):
-                yield cirq.Rz(rads=
+                yield cirq.rz(rads=
                         -two_body_coefficients[p, p] * time
                         ).on(qubits[p])
 
@@ -228,6 +228,9 @@ class ControlledAsymmetricLowRankTrotterStep(LowRankTrotterStep):
             control_qubit: Optional[cirq.Qid]=None
             ) -> cirq.OP_TREE:
 
+        if not isinstance(control_qubit, cirq.Qid):
+            raise TypeError('Control qudit must be specified.')
+
         n_qubits = len(qubits)
 
         # Change to the basis in which the one-body term is diagonal
@@ -260,7 +263,7 @@ class ControlledAsymmetricLowRankTrotterStep(LowRankTrotterStep):
                     qubits,
                     lambda p, q, a, b: rot111(
                         -2 * two_body_coefficients[p, q] * time).on(
-                            control_qubit, a, b))
+                            cast(cirq.Qid, control_qubit), a, b))
             qubits = qubits[::-1]
 
             # Simulate the diagonal two-body terms.
@@ -276,7 +279,7 @@ class ControlledAsymmetricLowRankTrotterStep(LowRankTrotterStep):
         yield bogoliubov_transform(qubits, prior_basis_matrix)
 
         # Apply phase from constant term
-        yield cirq.Rz(rads=
+        yield cirq.rz(rads=
                 -self.hamiltonian.constant * time).on(control_qubit)
 
     def step_qubit_permutation(self,

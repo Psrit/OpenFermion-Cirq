@@ -51,14 +51,13 @@ class VariationalAnsatz(metaclass=abc.ABCMeta):
         self.qubits = qubits or self._generate_qubits()
 
         # Generate the ansatz circuit
-        self.circuit = cirq.Circuit.from_ops(
+        self.circuit = cirq.Circuit(
                 self.operations(self.qubits),
                 strategy=cirq.InsertStrategy.EARLIEST)
 
     @abc.abstractmethod
     def params(self) -> Iterable[sympy.Symbol]:
         """The parameters of the ansatz."""
-        pass
 
     def param_scale_factors(self) -> Iterable[float]:
         """Coefficients to scale parameters by during optimization.
@@ -105,12 +104,10 @@ class VariationalAnsatz(metaclass=abc.ABCMeta):
         The operations should use Symbols produced by the `params` method
         of the ansatz.
         """
-        pass
 
     @abc.abstractmethod
     def _generate_qubits(self) -> Sequence[cirq.Qid]:
         """Produce qubits that can be used by the ansatz circuit."""
-        pass
 
     # TODO also need to consider mode permutation
     def qubit_permutation(self, qubits: Sequence[cirq.Qid]

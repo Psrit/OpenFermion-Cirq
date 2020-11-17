@@ -13,7 +13,7 @@
 """Gates that target four qubits."""
 
 
-from typing import Optional, Union, Tuple
+from typing import Optional, Union
 
 import numpy as np
 import sympy
@@ -23,7 +23,7 @@ from cirq._compat import proper_repr
 
 
 class DoubleExcitationGate(cirq.EigenGate):
-    """Evolve under -|0011><1100| + h.c. for some time."""
+    """Evolve under ``-|0011⟩⟨1100|`` + h.c. for some time."""
 
     def __init__(self, *,  # Forces keyword args.
                  exponent: Optional[Union[sympy.Symbol, float]]=None,
@@ -80,7 +80,7 @@ class DoubleExcitationGate(cirq.EigenGate):
                         ) -> Optional[np.ndarray]:
         if cirq.is_parameterized(self):
             return None
-        inner_matrix = cirq.unitary(cirq.Rx(-2 * np.pi * self.exponent))
+        inner_matrix = cirq.unitary(cirq.rx(-2 * np.pi * self.exponent))
         a = args.subspace_index(0b0011)
         b = args.subspace_index(0b1100)
         return cirq.apply_matrix_to_slices(args.target_tensor,
@@ -132,6 +132,7 @@ class DoubleExcitationGate(cirq.EigenGate):
         if args.use_unicode_characters:
             wire_symbols = ('⇅', '⇅', '⇵', '⇵')
         else:
+            # pylint: disable=anomalous-backslash-in-string
             wire_symbols = (r'/\ \/',
                             r'/\ \/',
                             '\/ /\\',
